@@ -1,0 +1,5 @@
+plotly
+beautifulsoup4
+requests
+scikit-learn
+pandas
