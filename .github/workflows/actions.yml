@@ -27,6 +27,6 @@ jobs:
     - name: Putting data
       env:
         GCP_SERV_ACCT: ${{ secrets.GCP_SERV_ACCT }}
-      run: touch ./app/gcp-services.json && echo $GCP_SERV_ACCT | base64 --decode > ./app/gcp-services.json
+      run: touch gcp-services.json && echo $GCP_SERV_ACCT | base64 --decode > gcp-services.json
     - name: Run script
       run: python load_qatar_car_data.py
