@@ -23,10 +23,10 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Create file
-      run: cat /home/runner/work/qatar_car_data/app/google-services.json | base64
+      run: ls -la
     - name: Putting data
       env:
         GCP_SERV_ACCT: ${{ secrets.GCP_SERV_ACCT }}
-      run: echo $DATA > /home/runner/work/qatar_car_data/app/google-services.json
+      run: touch ./app/gcp-services.json && echo $GCP_SERV_ACCT | base64 --decode > ./app/gcp-services.json
     - name: Run script
       run: python load_qatar_car_data.py
