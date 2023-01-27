@@ -17,4 +17,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Run script
-      run: python script.py
+      env:
+        GCP_SERV_ACCT: ${{ secrets.GCP_SERV_ACCT }}
+      run: python load_qatar_car_data.py
