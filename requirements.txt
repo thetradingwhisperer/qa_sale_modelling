@@ -7,4 +7,4 @@ ipython
 matplotlib
 nbformat
 pandas_gbq
-google.oauth2
+google-auth
