@@ -108,11 +108,13 @@ if __name__ == "__main__":
 
     #authenticate to gcp
     # Set the path to your service account key
-    path_to_key = '/home/runner/work/qatar_car_data/app/google-services.json'
-    service_Account_env = os.environ.get('GCP_SERV_ACCT')
+    import json
+
+    with open('service-account.json', 'r') as f:
+        json_data = json.load(f)
 
     # Use the credentials to create a client object
-    credentials = service_account.Credentials.from_service_account_file(path_to_key)
+    credentials = service_account.Credentials.from_service_account_file(f)
 
     save_df_to_bigquery(car_sale_df, "qatar_sale_car")
 
