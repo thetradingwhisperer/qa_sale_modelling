@@ -108,7 +108,8 @@ if __name__ == "__main__":
 
     #authenticate to gcp
     # Set the path to your service account key
-    path_to_key = os.environ.get('GCP_SERV_ACCT')
+    path_to_key = '/home/runner/work/qatar_car_data/app/google-services.json'
+    service_Account_env = os.environ.get('GCP_SERV_ACCT')
 
     # Use the credentials to create a client object
     credentials = service_account.Credentials.from_service_account_file(path_to_key)
