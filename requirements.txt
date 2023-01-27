@@ -6,3 +6,5 @@ pandas
 ipython
 matplotlib
 nbformat
+pandas_gbq
+google.oauth2
