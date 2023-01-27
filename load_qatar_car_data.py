@@ -78,6 +78,13 @@ def add_date_to_df(df):
     df["date"] = pd.to_datetime('today').normalize()
     return df
 
+# Save the dataframe to bigquery
+def save_df_to_bigquery(df, table_name):
+    """
+    This function saves a dataframe to bigquery table.
+    """
+    pandas_gbq.to_gbq(df, f'qatar.{table_name}', project_id='loyal-semiotics-314308', credentials=credentials,
+                      if_exists='append')
 
 
 
@@ -106,13 +113,9 @@ if __name__ == "__main__":
     # Use the credentials to create a client object
     credentials = service_account.Credentials.from_service_account_file(path_to_key)
 
-    # Save the dataframe to bigquery
-    def save_df_to_bigquery(df, table_name):
-        """
-        This function saves a dataframe to bigquery table.
-        """
-        pandas_gbq.to_gbq(f'qatar.{table_name}', project_id='loyal-semiotics-314308', credentials=credentials,
-                         if_exists='append')
+    save_df_to_bigquery(car_sale_df, "qatar_sale_car")
+
+
     
 
 
