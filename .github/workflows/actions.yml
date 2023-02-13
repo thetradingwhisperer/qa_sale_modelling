@@ -30,6 +30,6 @@ jobs:
     - name: Save JSON as file
       run: |
         echo ${{ secrets.GCP_SERV_ACCT }} > service-account.json
-        ls
+        cat service-account.json
     - name: Run script
       run: python load_qatar_car_data.py
