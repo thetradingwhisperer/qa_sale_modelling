@@ -23,7 +23,10 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Create file
-      run: ls -la
+      run: |
+        ls -la
+        touch service-account.json
+        ls -la
     - name: Save JSON as file
       run: |
         echo ${{ secrets.GCP_SERV_ACCT }} > service-account.json
