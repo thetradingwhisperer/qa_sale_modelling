@@ -2,10 +2,8 @@
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
-from google.cloud import bigquery
-from google.oauth2 import service_account
-import pandas_gbq
-import os
+import sqlite3
+
 
 
 def download_page():
@@ -78,25 +76,41 @@ def add_date_to_df(df):
     df["date"] = pd.to_datetime('today').normalize()
     return df
 
-# Save the dataframe to bigquery
-def save_df_to_bigquery(df, table_name):
+
+"""
+   Create a function that does the following:
+   1. Create a database using sqlite if it doesn't exist
+   2. Append the dataframe to the database
+"""
+def save_df_to_db(df, db_name):
     """
-    This function saves a dataframe to bigquery table.
+    This function saves a dataframe to a sqlite database.
     """
-    pandas_gbq.to_gbq(df, f'qatar.{table_name}', project_id='loyal-semiotics-314308', credentials=credentials,
-                      if_exists='append')
+    # Create a database connection
+    conn = sqlite3.connect(db_name)
+
+    # Append the dataframe to the database
+    df.to_sql("car_sale", conn, if_exists="append", index=False)
+
+    # Close the database connection
+    conn.close()
+
 
 
 
 if __name__ == "__main__":
     # Download the page
+    print("Downloading page from qatarsale.com")
     car_sale_df = download_page()
+    print("Download completed")
 
+    # Remove non-numeric characters from the price and mileage columns
     car_sale_df = remove_non_numeric(car_sale_df, "cynlinder")
     car_sale_df = remove_non_numeric(car_sale_df, "year")
     car_sale_df= car_sale_df[~(car_sale_df['year'] == 'Automatic')]
+    car_sale_df= car_sale_df[~(car_sale_df['year'] == 'Manual')]
 
-
+    # Convert the columns to the correct data types
     car_sale_df["car type"] = car_sale_df["car type"].astype('string')
     car_sale_df["price"] = car_sale_df["price"].astype(float)
     car_sale_df["mileage"] = car_sale_df["mileage"].astype(float)
@@ -104,19 +118,11 @@ if __name__ == "__main__":
     car_sale_df["year"] = car_sale_df["year"].astype(int)
     car_sale_df["cynlinder"] = car_sale_df["cynlinder"].astype(int)
 
+    # Add the current date to the dataframe
     car_sale_df = add_date_to_df(car_sale_df)
 
-    #authenticate to gcp
-    # Set the path to your service account key
-    import json
-
-    with open('service-account.json', 'r') as f:
-        json_data = json.load(f)
-
-    # Use the credentials to create a client object
-    credentials = service_account.Credentials.from_service_account_file(f)
-
-    save_df_to_bigquery(car_sale_df, "qatar_sale_car")
+    # Save the dataframe to a database
+    save_df_to_db(car_sale_df, "QatarCarSale.db")
 
 
     

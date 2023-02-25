@@ -6,5 +6,4 @@ pandas
 ipython
 matplotlib
 nbformat
-pandas_gbq
-google-auth
+lazypredict
