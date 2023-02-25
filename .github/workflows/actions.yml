@@ -1,12 +1,8 @@
 name: Schedule Python Script
-#on:
-#  schedule:
-#    - cron: '0 0 */14 * *'
-
 on:
-  push:
-    branches:
-      - main
+  schedule:
+    - cron: '0 0 */14 * *'
+
 
 jobs:
   run_script:
@@ -22,14 +18,5 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-    - name: Create file
-      run: |
-        ls -la
-        touch service-account.json
-        ls -la
-    - name: Save JSON as file
-      run: |
-        echo ${{ secrets.GCP_SERV_ACCT }}
-        cat service-account.json
     - name: Run script
-      run: python load_qatar_car_data.py
+      run: python save_data_in_db.py
