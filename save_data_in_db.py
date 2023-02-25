@@ -12,7 +12,7 @@ def download_page():
     """
     # Send a request to the website
     url_base = "https://qatarsale.com/en/products/cars_for_sale"
-    url_list = [url_base + "?page=" + str(x) for x in range(1, 15)]
+    url_list = [url_base + "?page=" + str(x) for x in range(1, 30)]
 
     car_sale_df = pd.DataFrame()
 
