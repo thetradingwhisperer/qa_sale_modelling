@@ -1,8 +1,10 @@
-name: Schedule Python Script
-on:
-  schedule:
-    - cron: '0 0 */14 * *'
+#name: Schedule Python Script
+#on:
+#  schedule:
+#    - cron: '0 0 */14 * *'
 
+name: Lint source code
+on: push
 
 jobs:
   run_script:
@@ -20,3 +22,13 @@ jobs:
         pip install -r requirements.txt
     - name: Run script
       run: python save_data_in_db.py
+    - name: Configure Git
+      run: |
+        git config --global user.email "arsenekeya@gmail.com"
+        git config --global user.name "thetradingwhisperer"
+    - name: Commit changes
+      run: |
+        git add QatarCarSale.db
+        git commit -m "Appended more car sale data each 2 weeks"
+        git push
+
