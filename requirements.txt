@@ -7,3 +7,5 @@ ipython
 matplotlib
 nbformat
 lazypredict
+flask
+streamlit

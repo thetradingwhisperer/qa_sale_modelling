@@ -53,6 +53,17 @@ def train_model(df):
     """
     This function trains a model.
     """
+    
+    #clean the data
+    df = df.dropna()
+    df = df[df['cynlinder'] <12]
+    # Filter when year is above 2000 and below 2022
+    df = df[(df['year'] > 2000) & (df['year'] < 2022)]
+    # Filter when mileage is above 0 and below 500000
+    df = df[(df['mileage'] > 0) & (df['mileage'] < 500000)]
+    # Filter when price is above 0 and below 1000000
+    df = df[(df['price'] > 0) & (df['price'] < 1000000)]
+    
     # Split the data into training and test sets
     drop_col = ["date", "price"]
     X = df.drop(drop_col, axis=1)
@@ -90,8 +101,8 @@ def train_model(df):
         plt.savefig("Predicted_vs_Actual_Price.png")
 
         #Save in a dataframe the predicted price vs actual price
-        pd_df = pd.DataFrame(pipeline.predict(X_train), y_train)
-        print(pd_df)
+        pd_df = pd.DataFrame([pipeline.predict(X_train), y_train])
+        print(X_train)
 
         return pipeline
 
@@ -112,4 +123,3 @@ def main():
 if __name__ == "__main__":
     main()
 
-    
