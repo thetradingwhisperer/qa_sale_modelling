@@ -104,19 +104,20 @@ def train_model(df):
         pd_df = pd.DataFrame([pipeline.predict(X_train), y_train])
         print(X_train)
 
-        return pipeline
+        return pipeline, df
 
 def main():
     """
     This function runs the main program.
     """
     # Load the data
-    df = load_data_from_db('QatarCarSale.db')
+    raw_car_data = load_data_from_db('QatarCarSale.db')
     # Train the model
-    pipeline = train_model(df)
+    pipeline, cleaned_car_data = train_model(raw_car_data)
 
     # Save the model
     joblib.dump(pipeline, 'model/model.pkl')
+    cleaned_car_data.to_csv('model/train_car_data.csv', index=False)
 
 
 
