@@ -1,10 +1,10 @@
-#name: Schedule Python Script
-#on:
-#  schedule:
-#    - cron: '0 0 */14 * *'
+name: Schedule Python Script
+on:
+  schedule:
+    - cron: '0 0 */14 * *'
 
-name: Lint source code
-on: push
+#name: Lint source code
+#on: push
 
 jobs:
   run_script:
