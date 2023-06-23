@@ -9,7 +9,7 @@ import plotly.express as px
 
 
 # Load the data
-car_data = pd.read_csv('model/train_car_data.csv', error_bad_lines=False)
+car_data = pd.read_csv('model/train_car_data.csv')
 car_type = car_data['car type'].unique()
 year = car_data['year'].unique()
 gear_type= car_data['gear_type'].unique()
