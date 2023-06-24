@@ -41,6 +41,7 @@ input.columns = ['car type', 'mileage', 'gear_type', 'year', 'cynlinder']
 #Tell the user what he has selected
 st.write('You have selected the following parameters:')
 st.write(input)
+prediction = round(model.predict(input)[0],2)
 st.write("The predicted price in USD is: ", round(model.predict(input)[0],2))
 
 
@@ -50,15 +51,29 @@ st.subheader('Explore the market data on your selected car type')
 
 # Do some data visualization on the selected car type - use plotly
 car_data_viz = car_data[car_data['car type'] == car_type]
-fig = px.scatter(car_data_viz, x='mileage', y='price', 
+car_data_viz['type'] = 'train'
+
+# Add the new prediction to the data
+new_pred = pd.DataFrame(np.array([car_type, prediction, mileage, gear_type, year, cynlinder]).reshape(1, -1))
+new_pred['type'] = 'prediction'
+new_pred.columns = ['car type', 'price', 'mileage', 'gear_type', 'year', 'cynlinder', 'type']
+new_car_data_viz = pd.concat([car_data_viz, new_pred], axis=0)
+
+fig1 = px.scatter(car_data_viz, x='mileage', y='price', 
                  color='year',
                  size='cynlinder',
                  hover_data=['year'])
 
-#Add dynamic title with plotly express
-fig.update_layout(title_text='Price vs Mileage for ' + car_type)
+fig2 = px.scatter(new_pred, x='mileage', y='price', size = [10])
+fig2.update_traces(marker=dict(color='green', symbol='x'))
+# Add the data from the second figure to the first one
+for trace in fig2.data:
+    fig1.add_trace(trace)
 
-st.plotly_chart(fig)
+#Add dynamic title with plotly express
+fig1.update_layout(title_text='Price vs Mileage for ' + car_type)
+
+st.plotly_chart(fig1)
 
 # Put some space between the content in the app
 
