@@ -42,23 +42,39 @@ input.columns = ['car type', 'mileage', 'gear_type', 'year', 'cynlinder']
 st.write('You have selected the following parameters:')
 st.write(input)
 prediction = round(model.predict(input)[0],2)
-st.write("The predicted price in USD is: ", round(model.predict(input)[0],2))
-
-
-st.write('---')
-st.subheader('Explore the market data on your selected car type')
-
-
-# Do some data visualization on the selected car type - use plotly
-car_data_viz = car_data[car_data['car type'] == car_type]
-car_data_viz['type'] = 'train'
 
 # Add the new prediction to the data
 new_pred = pd.DataFrame(np.array([car_type, prediction, mileage, gear_type, year, cynlinder]).reshape(1, -1))
 new_pred['type'] = 'prediction'
 new_pred.columns = ['car type', 'price', 'mileage', 'gear_type', 'year', 'cynlinder', 'type']
+
+car_data_viz = car_data[car_data['car type'] == car_type]
+car_data_viz['type'] = 'train'
 new_car_data_viz = pd.concat([car_data_viz, new_pred], axis=0)
 
+# do the kolmogorov test
+from scipy.stats import ks_2samp
+try:
+    
+    stat, p = ks_2samp(np.array(car_data_viz[(car_data_viz['car type']==car_type)]['mileage'].values).reshape(1, -1),
+                    np.array(new_pred['mileage'].values.reshape(1, -1)))
+    if p < 0.05:
+        st.write('The car spec chosen is significantly different from historical data' 
+                 'the predicted price may not be accurate')
+        # print out the prediction
+        st.write("The predicted price in USD is: ", round(model.predict(input)[0],2))
+    else:
+        # print out the prediction
+        st.write("The predicted price in USD is: ", round(model.predict(input)[0],2))
+except:
+    st.error('cannot perform the test to see if the car spec chosen is significantly different from historical data')
+
+
+
+st.write('---')
+st.subheader('Explore the market data on your selected car type')
+st.markdown('The following chart shows the historical price vs mileage for for the selected car type on qatar sale website')
+# Do some data visualization on the selected car type - use plotly
 fig1 = px.scatter(car_data_viz, x='mileage', y='price', 
                  color='year',
                  size='cynlinder',
